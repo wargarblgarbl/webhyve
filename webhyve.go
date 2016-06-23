@@ -88,10 +88,51 @@ func vmInfo(vmname string)(jsonout []byte){
 
 func main() {
 	http.HandleFunc("/", mainHandler)
+	http.HandleFunc("/start/", startHandler)
+	http.HandleFunc("/stop/", stopHandler)
+	http.HandleFunc("/info/", infoHandler)
 	http.ListenAndServe(":8080", nil)
 	
 }
 
+func infoHandler (w http.ResponseWriter, r *http.Request) {
+	x := strings.Split(r.URL.Path, "/")
+    vmname :=x[len(x)-1]
+	w.Header().Set("Content-Type", "application/json")
+	js := vmInfo(vmname)
+	w.Write(js)
+	
+}
+
+func startHandler (w http.ResponseWriter, r *http.Request) {
+    x := strings.Split(r.URL.Path, "/")
+    vmname :=x[len(x)-1]
+	startVm(vmname)
+//	fmt.Fprintf(w, "starting VM %s", vmname)
+	w.Header().Set("Content-Type", "application/json")
+	js := vmInfo(vmname)
+	w.Write(js)
+}
+
+func stopHandler (w http.ResponseWriter, r *http.Request) {
+    x := strings.Split(r.URL.Path, "/")
+    vmname :=x[len(x)-1]
+	stopVm(vmname)
+//	fmt.Fprintf(w, "stopping VM %s", vmname)
+	w.Header().Set("Content-Type", "application/json")
+	js := vmInfo(vmname)
+	w.Write(js)
+
+}
+
+func startVm (vmname string)(){
+	exec.Command("vm", "start", vmname)
+}
+
+
+func stopVm (vmname string)(){
+	exec.Command("vm", "stop", vmname)
+}
 
 
 func mainHandler (w http.ResponseWriter, r *http.Request) {
