@@ -58,13 +58,13 @@ func vmInfo(vmname string)(jsonout []byte){
 		second := strings.Join(zuu[1:2], "")
 		varname := strings.Replace(first, ":", "", -1)
 		//	fmt.Println(varname, zuu[1:2])
-
+	//	fmt.Println(varname, zuu[1:2])
 		
 		switch varname {
 		case "state":
 			State = second
 			fmt.Println(second)
-		case "guest":
+		case "VirtualMachine":
 			Guest = second
 		case "uuid":
 			Uuid = second
@@ -76,11 +76,9 @@ func vmInfo(vmname string)(jsonout []byte){
 			MemoryResident = second			
 		}
 	}
-			m := Message{State, Guest, Uuid, CPU, Memory, MemoryResident}
-		jsonout, _ = json.Marshal(m)
-
+	m := Message{State, Guest, Uuid, CPU, Memory, MemoryResident}
+	jsonout, _ = json.Marshal(m)
 	return
-	
 }
 
 
